@@ -41,7 +41,7 @@
             />
 
             <!-- Status Message Area --><div id="status-message" class="text-center h-8">
-                <span class="text-gray-500 font-medium">Ready to scan or type...</span>
+                <span class="text-gray-700 font-semibold">Ready to scan or type...</span>
             </div>
             
             <!-- Hidden Input for Date/Time - Not used, but included for form consistency --><input type="hidden" id="timestamp" name="timestamp" />
@@ -100,10 +100,19 @@
         function showStatus(message, type = 'info') {
             loadingIndicator.classList.add('hidden');
             let color = '';
-            if (type === 'success') color = 'text-green-600';
-            else if (type === 'error') color = 'text-red-600';
-            else color = 'text-gray-600';
-            statusMessage.innerHTML = `<span class="${color} font-medium">${message}</span>`;
+            let style = ''; 
+            if (type === 'success') {
+                color = 'text-green-600';
+                style = 'font-bold'; 
+            } else if (type === 'error') {
+                color = 'text-red-600';
+                style = 'font-bold';
+            } else {
+                // Info/Entering ID... style: darker gray and bold
+                color = 'text-gray-700'; 
+                style = 'font-semibold'; 
+            }
+            statusMessage.innerHTML = `<span class="${color} ${style}">${message}</span>`;
         }
 
         function showLoading() {
@@ -133,12 +142,12 @@
                 modalCloseBtn.classList.remove('hidden'); // Show button for required click
             } else {
                 icon = 'ℹ️';
-                color = 'text-blue-600';
+                color = 'text-teal-600'; // Corrected to be consistent with the theme
                 modalCloseBtn.classList.remove('hidden'); 
             }
             
             modalIcon.textContent = icon;
-            modalIcon.classList.remove('text-green-600', 'text-red-600', 'text-blue-600');
+            modalIcon.classList.remove('text-green-600', 'text-red-600', 'text-teal-600');
             modalIcon.classList.add(color);
             modalTitle.textContent = title;
             modalContent.textContent = message;
@@ -244,9 +253,9 @@
 
             // Provide real-time feedback on length
             if (this.value.length < MIN_LENGTH) {
-                showStatus(`Entering code... (${this.value.length}/${MAX_LENGTH})`, 'info');
+                showStatus(`Entering ID... (${this.value.length}/${MAX_LENGTH})`, 'info');
             } else if (this.value.length === MAX_LENGTH) {
-                showStatus(`Code ready. Press Enter to record.`, 'success');
+                showStatus(`ID ready. Press Enter to record.`, 'success');
             } else {
                  showStatus(`Maximum length reached.`, 'error');
             }
