@@ -57,19 +57,21 @@
         const totalSteps = 3;
 
         function nextStep() {
-            const currentInputs = document.querySelectorAll(`#step${currentStep} input`);
             let valid = true;
             
             if (currentStep === 1) {
-                const idInput = document.getElementById('studentId');
-                // Regex validation for exactly 8 digits
-                const idRegex = /^[0-9]{8}$/;
-                if (!idRegex.test(idInput.value)) {
-                    showNotice("Invalid ID", "Please enter exactly 8 numbers.");
-                    idInput.focus();
+                const nameInput = document.getElementById('studentName');
+                // Basic validation: ensure at least two words (first and last name)
+                const nameValue = nameInput.value.trim();
+                const nameParts = nameValue.split(/\s+/);
+                
+                if (nameValue === "" || nameParts.length < 2) {
+                    showNotice("Name Required", "Please enter your first and last name.");
+                    nameInput.focus();
                     valid = false;
                 }
             } else {
+                const currentInputs = document.querySelectorAll(`#step${currentStep} input`);
                 const checked = Array.from(currentInputs).some(input => input.checked);
                 if (!checked) {
                     showNotice("Selection Required", "Please select an option to continue.");
@@ -114,13 +116,6 @@
                 showSuccess();
             }
         }
-
-        // Prevent non-numeric key presses
-        function filterNumericInput(e) {
-            if (e.key.length === 1 && (e.key < '0' || e.key > '9')) {
-                e.preventDefault();
-            }
-        }
     </script>
 </head>
 <body class="flex items-center justify-center p-4">
@@ -154,27 +149,24 @@
                 class="p-8"
             >
                 
-                <!-- STEP 1: Student ID -->
+                <!-- STEP 1: Student Name -->
                 <div id="step1" class="step-page active">
                     <div class="text-center mb-8">
                         <h2 class="text-xl font-bold text-gray-800">Student Identity</h2>
-                        <p class="text-gray-500 text-sm">Scan or enter your 8-digit Student ID</p>
+                        <p class="text-gray-500 text-sm">Please enter your first and last name</p>
                     </div>
                     
                     <div class="relative group">
                         <input 
                             type="text" 
-                            id="studentId"
+                            id="studentName"
                             name="entry.1301796898" 
-                            placeholder="00000000" 
-                            inputmode="numeric"
-                            pattern="[0-9]{8}"
-                            maxlength="8"
-                            onkeypress="filterNumericInput(event)"
-                            class="w-full bg-gray-50 border-2 border-gray-200 rounded-2xl py-6 text-center text-4xl font-black tracking-[0.2em] text-blue-600 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                            placeholder="John Doe" 
+                            autocomplete="name"
+                            class="w-full bg-gray-50 border-2 border-gray-200 rounded-2xl py-6 px-6 text-center text-3xl font-bold text-blue-600 focus:border-blue-600 focus:bg-white transition-all outline-none"
                             required
                         >
-                        <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white px-4 py-1 rounded-full border border-gray-200 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Numbers Only</div>
+                        <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white px-4 py-1 rounded-full border border-gray-200 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Full Name Required</div>
                     </div>
 
                     <div class="mt-12">
@@ -225,7 +217,6 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-3 mb-8">
-                        <!-- Locations -->
                         <label class="cursor-pointer">
                             <input type="radio" name="entry.798650606" value="Nearest Restroom" class="peer sr-only" required>
                             <div class="option-content h-full p-4 border-2 border-gray-100 rounded-2xl text-center transition-all peer-checked:border-blue-600 peer-checked:bg-blue-50">
